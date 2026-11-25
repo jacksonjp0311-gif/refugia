@@ -33,30 +33,30 @@ The residual seed is the ceiling and the evidence. Frequent fire without residua
 
 ## Organs
 
-- `refugia/engines.py` — absorbed engines (factor, classgroup, ap, rank). Every query returns `CertifiedResult` with status. Class groups labeled conditional (GRH). Rank with proof=False labeled heuristic.
+- `refugia/engines.py` — absorbed engines (factor, classgroup, ap, rank). Status always returned. Class groups conditional (GRH). Rank proof=False heuristic.
 - `refugia/oracle.py` — Oracle. Claims route through the engines. Receipts append-only.
-- `refugia/society.py` — Society. Proposals → keep/hold/revert under status.
+- `refugia/society.py` — Society. Proposals → keep/hold/revert under status. Keep becomes candidate only.
+- `refugia/authorize.py` — Authorization surface. Records keep candidates. Durable acceptance requires explicit human flag. No role can accept without it.
+- `refugia/proposer.py` — Proposer. Posts well-formed claims to the bus. Does not verify or decide.
 - `refugia/twin.py` — Twin. Treatment vs control. No promotion from twin.
 - `refugia/bus.py` — Bus. Append-only messages between roles.
 - `refugia/loop.py` — Minimal loop. Reads `propose` from bus, skips already-decided, runs society cycle, posts decisions.
 - `refugia/witness.py` — Witness. Summarizes decisions, bus topics, oracle count. Does not mutate.
 
-Roles under `society/systems/roles.md`: proposer, oracle, society, twin, witness.
+Roles under `society/systems/roles.md`. Authorization boundary is explicit: durable acceptance is outside the roles.
 
 ```bash
 pip install -r requirements.txt
-python scripts/wire_check.py
-python scripts/oracle_demo.py
-python scripts/society_cycle.py
-python scripts/twin_demo.py
+python scripts/propose_demo.py
 python scripts/loop_demo.py
 python scripts/witness_demo.py
+python scripts/authorize_demo.py
 ```
 
 Manual runner only: Actions → Refugia check. No schedule. No automatic evolve. Human authorize still required for durable acceptance.
 
 ## Status
 
-Engines expanded. Loop skips processed. Witness organ live. Residual seed intact. Greater system continuing to form.
+Proposer and authorization surface live. Closed path: propose → verify → decide → candidate. Residual seed intact. Greater system continuing to form.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
