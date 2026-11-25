@@ -2,8 +2,8 @@
 
 Proposals enter. Oracle verifies. Keep only when status is proven and matched.
 Conditional and heuristic stay labeled and do not promote.
-Append-only decisions. Human authorize still required for durable acceptance.
-Residual seed: status + receipt + ceiling.
+Keep actions become candidates only. Durable acceptance requires human flag.
+Append-only decisions and candidates. Residual seed: status + receipt + ceiling.
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
+from .authorize import Authorizer
 from .oracle import Claim, Oracle, Verification
 
 
@@ -33,6 +34,7 @@ class Society:
     def __init__(self, root: Path | str = "."):
         self.root = Path(root)
         self.oracle = Oracle(self.root / "society" / "receipts" / "oracle.jsonl")
+        self.authorizer = Authorizer(root)
         self.decisions_path = self.root / "society" / "receipts" / "decisions.jsonl"
         self.decisions_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -51,6 +53,7 @@ class Society:
         elif status == "proven" and matched is True:
             action = "keep"
             reason = "proven and matched"
+            self.authorizer.record_candidate(verification.claim_id, status, reason)
         elif status == "proven" and matched is False:
             action = "revert"
             reason = "proven but mismatch"
