@@ -1,6 +1,6 @@
 # Refugia — manual check only
 # No schedule. No automatic runs. No evolve cycles.
-# Structural + wiring + Oracle + society decision.
+# Structural + wiring + Oracle + society + twin/bus.
 # Failure noisy. Success quiet. Residual seed intact.
 name: Refugia check
 
@@ -10,9 +10,9 @@ on:
       note:
         description: "Optional note for this check"
         required: false
-        default: "structural + wiring + oracle + society"
+        default: "full organs"
       wire:
-        description: "Run full wiring, Oracle, and society cycle (true/false)"
+        description: "Run full path (true/false)"
         required: false
         default: "true"
 
@@ -40,9 +40,8 @@ jobs:
           test -f refugia/engines.py
           test -f refugia/oracle.py
           test -f refugia/society.py
-          test -f scripts/wire_check.py
-          test -f scripts/oracle_demo.py
-          test -f scripts/society_cycle.py
+          test -f refugia/twin.py
+          test -f refugia/bus.py
           echo "Structure present"
           echo "Note: ${{ github.event.inputs.note }}"
 
@@ -52,17 +51,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Wiring check
-        if: ${{ github.event.inputs.wire == 'true' }}
-        run: python scripts/wire_check.py
-
-      - name: Oracle demo
-        if: ${{ github.event.inputs.wire == 'true' }}
-        run: python scripts/oracle_demo.py
-
-      - name: Society cycle (propose → verify → decide; status retained)
+      - name: Wiring + Oracle + Society + Twin
         if: ${{ github.event.inputs.wire == 'true' }}
         run: |
           set -euo pipefail
+          python scripts/wire_check.py
+          python scripts/oracle_demo.py
           python scripts/society_cycle.py
-          echo "::notice::Society cycle completed. Decisions respect status. No auto-promotion. Residual seed intact."
+          python scripts/twin_demo.py
+          echo "::notice::Full path completed. Status retained. Residual seed intact. No auto-evolve."
