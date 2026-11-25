@@ -33,12 +33,13 @@ The residual seed is the ceiling and the evidence. Frequent fire without residua
 
 ## Organs
 
-- `refugia/engines.py` — absorbed engines. Every query returns `CertifiedResult` with status.
+- `refugia/engines.py` — absorbed engines (factor, classgroup, ap, rank). Every query returns `CertifiedResult` with status. Class groups labeled conditional (GRH). Rank with proof=False labeled heuristic.
 - `refugia/oracle.py` — Oracle. Claims route through the engines. Receipts append-only.
 - `refugia/society.py` — Society. Proposals → keep/hold/revert under status.
 - `refugia/twin.py` — Twin. Treatment vs control. No promotion from twin.
 - `refugia/bus.py` — Bus. Append-only messages between roles.
-- `refugia/loop.py` — Minimal loop. Reads `propose` from bus, runs society cycle, posts decisions.
+- `refugia/loop.py` — Minimal loop. Reads `propose` from bus, skips already-decided, runs society cycle, posts decisions.
+- `refugia/witness.py` — Witness. Summarizes decisions, bus topics, oracle count. Does not mutate.
 
 Roles under `society/systems/roles.md`: proposer, oracle, society, twin, witness.
 
@@ -49,12 +50,13 @@ python scripts/oracle_demo.py
 python scripts/society_cycle.py
 python scripts/twin_demo.py
 python scripts/loop_demo.py
+python scripts/witness_demo.py
 ```
 
 Manual runner only: Actions → Refugia check. No schedule. No automatic evolve. Human authorize still required for durable acceptance.
 
 ## Status
 
-Roles and propose-from-bus loop live. Residual seed intact. Greater system continuing to form.
+Engines expanded. Loop skips processed. Witness organ live. Residual seed intact. Greater system continuing to form.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
