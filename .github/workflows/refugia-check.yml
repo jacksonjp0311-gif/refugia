@@ -1,6 +1,7 @@
-# Refugia — manual structural check only
-# No schedule. No automatic runs. No evolve cycles until the engines are wired and the absorption holds.
-# Failure noisy. Success quiet.
+# Refugia — manual check only
+# No schedule. No automatic runs. No evolve cycles.
+# Structural presence + optional engine wiring verification.
+# Failure noisy. Success quiet. Residual seed intact.
 name: Refugia check
 
 on:
@@ -9,7 +10,11 @@ on:
       note:
         description: "Optional note for this check"
         required: false
-        default: "structural only"
+        default: "structural + wiring"
+      wire:
+        description: "Run engine wiring check (true/false)"
+        required: false
+        default: "true"
 
 permissions:
   contents: read
@@ -17,7 +22,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,7 +37,20 @@ jobs:
           set -euo pipefail
           test -f README.md
           test -f CHARTER.md
-          echo "README and CHARTER present"
+          test -f refugia/engines.py
+          test -f scripts/wire_check.py
+          echo "Structure present"
           echo "Note: ${{ github.event.inputs.note }}"
-          echo "Absorption not yet complete. No cycles. Engines not wired."
-          echo "::notice::Structural check passed. No evolve. Residual seed intact."
+
+      - name: Install engines
+        if: ${{ github.event.inputs.wire == 'true' }}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Wiring check (status retained, no promote)
+        if: ${{ github.event.inputs.wire == 'true' }}
+        run: |
+          set -euo pipefail
+          python scripts/wire_check.py
+          echo "::notice::Wiring check completed. Status labels retained. No evolve. Residual seed intact."
