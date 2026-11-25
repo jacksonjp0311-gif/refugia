@@ -1,6 +1,6 @@
 # Refugia — manual check only
 # No schedule. No automatic runs. No evolve cycles.
-# Structural presence + optional engine wiring verification.
+# Structural + wiring + Oracle verification.
 # Failure noisy. Success quiet. Residual seed intact.
 name: Refugia check
 
@@ -10,9 +10,9 @@ on:
       note:
         description: "Optional note for this check"
         required: false
-        default: "structural + wiring"
+        default: "structural + wiring + oracle"
       wire:
-        description: "Run engine wiring check (true/false)"
+        description: "Run engine wiring and Oracle demo (true/false)"
         required: false
         default: "true"
 
@@ -22,7 +22,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,7 +38,9 @@ jobs:
           test -f README.md
           test -f CHARTER.md
           test -f refugia/engines.py
+          test -f refugia/oracle.py
           test -f scripts/wire_check.py
+          test -f scripts/oracle_demo.py
           echo "Structure present"
           echo "Note: ${{ github.event.inputs.note }}"
 
@@ -48,9 +50,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Wiring check (status retained, no promote)
+      - name: Wiring check
         if: ${{ github.event.inputs.wire == 'true' }}
         run: |
           set -euo pipefail
           python scripts/wire_check.py
-          echo "::notice::Wiring check completed. Status labels retained. No evolve. Residual seed intact."
+
+      - name: Oracle demo (status retained, receipts append-only)
+        if: ${{ github.event.inputs.wire == 'true' }}
+        run: |
+          set -euo pipefail
+          python scripts/oracle_demo.py
+          echo "::notice::Oracle demo completed. Status labels retained. Receipts append-only. No evolve. Residual seed intact."
