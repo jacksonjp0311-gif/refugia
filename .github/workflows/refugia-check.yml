@@ -1,6 +1,6 @@
 # Refugia — manual check only
 # No schedule. No automatic runs. No evolve cycles.
-# Structural + wiring + Oracle + society + twin/bus.
+# Structural + full organs including loop.
 # Failure noisy. Success quiet. Residual seed intact.
 name: Refugia check
 
@@ -10,7 +10,7 @@ on:
       note:
         description: "Optional note for this check"
         required: false
-        default: "full organs"
+        default: "full organs + loop"
       wire:
         description: "Run full path (true/false)"
         required: false
@@ -42,6 +42,8 @@ jobs:
           test -f refugia/society.py
           test -f refugia/twin.py
           test -f refugia/bus.py
+          test -f refugia/loop.py
+          test -f society/systems/roles.md
           echo "Structure present"
           echo "Note: ${{ github.event.inputs.note }}"
 
@@ -51,7 +53,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Wiring + Oracle + Society + Twin
+      - name: Full path including loop
         if: ${{ github.event.inputs.wire == 'true' }}
         run: |
           set -euo pipefail
@@ -59,4 +61,5 @@ jobs:
           python scripts/oracle_demo.py
           python scripts/society_cycle.py
           python scripts/twin_demo.py
-          echo "::notice::Full path completed. Status retained. Residual seed intact. No auto-evolve."
+          python scripts/loop_demo.py
+          echo "::notice::Full path + loop completed. Status retained. Residual seed intact. No auto-evolve."
