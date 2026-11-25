@@ -31,8 +31,21 @@ A governed agent society whose computational substrate now includes the engines.
 
 The residual seed is the ceiling and the evidence. Frequent fire without residual patches converts the system. Same rule here.
 
+## Wiring
+
+Engines are absorbed as organs under `refugia/engines.py`.  
+Every query returns a `CertifiedResult` with an explicit status.  
+Callers must retain the label. No auto-promotion.
+
+```bash
+pip install -r requirements.txt
+python scripts/wire_check.py
+```
+
+Manual runner only: Actions → Refugia check. No schedule. No evolve cycles until the society code is absorbed and the structure holds.
+
 ## Status
 
-Skeleton. Runners are present but manual-only and inert until the engines are wired and the absorption is verified. No cycles run until the structure holds.
+Wiring begun. Residual seed intact. Greater system still emerging.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
