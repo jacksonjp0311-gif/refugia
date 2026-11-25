@@ -1,6 +1,6 @@
 # Refugia — manual check only
 # No schedule. No automatic runs. No evolve cycles.
-# Structural + wiring + Oracle verification.
+# Structural + wiring + Oracle + society decision.
 # Failure noisy. Success quiet. Residual seed intact.
 name: Refugia check
 
@@ -10,9 +10,9 @@ on:
       note:
         description: "Optional note for this check"
         required: false
-        default: "structural + wiring + oracle"
+        default: "structural + wiring + oracle + society"
       wire:
-        description: "Run engine wiring and Oracle demo (true/false)"
+        description: "Run full wiring, Oracle, and society cycle (true/false)"
         required: false
         default: "true"
 
@@ -22,7 +22,7 @@ permissions:
 jobs:
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -39,8 +39,10 @@ jobs:
           test -f CHARTER.md
           test -f refugia/engines.py
           test -f refugia/oracle.py
+          test -f refugia/society.py
           test -f scripts/wire_check.py
           test -f scripts/oracle_demo.py
+          test -f scripts/society_cycle.py
           echo "Structure present"
           echo "Note: ${{ github.event.inputs.note }}"
 
@@ -52,13 +54,15 @@ jobs:
 
       - name: Wiring check
         if: ${{ github.event.inputs.wire == 'true' }}
-        run: |
-          set -euo pipefail
-          python scripts/wire_check.py
+        run: python scripts/wire_check.py
 
-      - name: Oracle demo (status retained, receipts append-only)
+      - name: Oracle demo
+        if: ${{ github.event.inputs.wire == 'true' }}
+        run: python scripts/oracle_demo.py
+
+      - name: Society cycle (propose → verify → decide; status retained)
         if: ${{ github.event.inputs.wire == 'true' }}
         run: |
           set -euo pipefail
-          python scripts/oracle_demo.py
-          echo "::notice::Oracle demo completed. Status labels retained. Receipts append-only. No evolve. Residual seed intact."
+          python scripts/society_cycle.py
+          echo "::notice::Society cycle completed. Decisions respect status. No auto-promotion. Residual seed intact."
