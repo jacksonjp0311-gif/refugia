@@ -1,0 +1,38 @@
+# Refugia — manual structural check only
+# No schedule. No automatic runs. No evolve cycles until the engines are wired and the absorption holds.
+# Failure noisy. Success quiet.
+name: Refugia check
+
+on:
+  workflow_dispatch:
+    inputs:
+      note:
+        description: "Optional note for this check"
+        required: false
+        default: "structural only"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Structural presence
+        run: |
+          set -euo pipefail
+          test -f README.md
+          test -f CHARTER.md
+          echo "README and CHARTER present"
+          echo "Note: ${{ github.event.inputs.note }}"
+          echo "Absorption not yet complete. No cycles. Engines not wired."
+          echo "::notice::Structural check passed. No evolve. Residual seed intact."
