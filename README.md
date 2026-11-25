@@ -31,24 +31,26 @@ A governed agent society whose computational substrate now includes the engines.
 
 The residual seed is the ceiling and the evidence. Frequent fire without residual patches converts the system. Same rule here.
 
-## Wiring
+## Organs
 
 - `refugia/engines.py` — absorbed engines. Every query returns `CertifiedResult` with status.
-- `refugia/oracle.py` — Oracle organ. Claims route through the engines. Receipts append-only.
-- `refugia/society.py` — Society organ. Proposals enter, decisions follow keep/hold/revert under status. Proven+matched can keep (candidate only). Conditional/heuristic hold. Error or mismatch revert.
-- Decisions append-only under `society/receipts/decisions.jsonl`.
+- `refugia/oracle.py` — Oracle. Claims route through the engines. Receipts append-only.
+- `refugia/society.py` — Society. Proposals → keep/hold/revert under status. Proven+matched can keep (candidate). Conditional/heuristic hold.
+- `refugia/twin.py` — Twin. Treatment uses engines. Control does not. Comparison reported. No promotion from twin.
+- `refugia/bus.py` — Bus. Append-only messages between roles.
 
 ```bash
 pip install -r requirements.txt
 python scripts/wire_check.py
 python scripts/oracle_demo.py
 python scripts/society_cycle.py
+python scripts/twin_demo.py
 ```
 
 Manual runner only: Actions → Refugia check. No schedule. No automatic evolve. Human authorize still required for durable acceptance.
 
 ## Status
 
-Society organ live. Keep/revert under residual seed. Greater system continuing to form.
+Twin and bus organs live. Residual seed intact. Greater system continuing to form.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
