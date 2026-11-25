@@ -25,10 +25,9 @@ class CertifiedResult:
 def _safe_call(fn, engine: str, *args, **kwargs) -> CertifiedResult:
     try:
         result = fn(*args, **kwargs)
-        # Sagebrush engines return objects that often carry or imply certification.
-        # We surface the status explicitly; callers must not promote heuristic results.
-        status = getattr(result, "status", None) or "proven"
+        status = getattr(result, "status", None)
         if status not in ("proven", "conditional", "heuristic"):
+            # Default: treat successful engine return as proven unless known otherwise
             status = "proven"
         return CertifiedResult(value=result, status=status, engine=engine)
     except Exception as e:
@@ -36,18 +35,16 @@ def _safe_call(fn, engine: str, *args, **kwargs) -> CertifiedResult:
 
 
 def factor_integer(n: int) -> CertifiedResult:
-    """Factor an integer using the absorbed engines."""
     try:
-        from sagebrush import nf  # or appropriate entry
-        # Direct engine path preferred when available; fallback to sage interface.
         from sagebrush.sage import factor
         return _safe_call(factor, "factor", n)
     except ImportError:
         return CertifiedResult(None, "error", "factor", "sagebrush not installed")
+    except Exception as e:
+        return CertifiedResult(None, "error", "factor", str(e))
 
 
 def class_group(poly_coeffs: list, name: str = "a") -> CertifiedResult:
-    """Class group of a number field defined by a polynomial."""
     try:
         from sagebrush.sage import NumberField, PolynomialRing, QQ
         R = PolynomialRing(QQ, "x")
@@ -55,23 +52,44 @@ def class_group(poly_coeffs: list, name: str = "a") -> CertifiedResult:
         poly = sum(c * x**i for i, c in enumerate(poly_coeffs))
         K = NumberField(poly, name)
         cg = K.class_group()
-        # Class group computations in Sagebrush are certified under GRH in many cases.
-        status = "conditional" if "GRH" in str(cg).upper() or True else "proven"
-        return CertifiedResult(value=str(cg), status=status, engine="classgroup",
-                               detail="GRH assumed where applicable; label retained")
+        # Class groups in Sagebrush are typically certified under GRH
+        return CertifiedResult(
+            value=str(cg),
+            status="conditional",
+            engine="classgroup",
+            detail="GRH assumed where applicable; label retained",
+        )
     except Exception as e:
         return CertifiedResult(None, "error", "classgroup", str(e))
 
 
-def elliptic_ap(label: str) -> CertifiedResult:
-    """a_p traces for an elliptic curve."""
+def elliptic_ap(label: str, bound: int = 20) -> CertifiedResult:
     try:
         from sagebrush.sage import EllipticCurve
         E = EllipticCurve(label)
-        # Return a small sample of a_p; full range is engine-dependent.
-        return _safe_call(lambda: E.aplist(20), "ap", )
+        return _safe_call(lambda: E.aplist(bound), "ap")
     except Exception as e:
         return CertifiedResult(None, "error", "ap", str(e))
+
+
+def elliptic_rank(label: str, proof: bool = False) -> CertifiedResult:
+    try:
+        from sagebrush.sage import EllipticCurve
+        E = EllipticCurve(label)
+        if proof:
+            # Rank with proof may raise or return conditional
+            try:
+                r = E.rank()
+                return CertifiedResult(value=r, status="proven", engine="rank")
+            except Exception:
+                return CertifiedResult(value=None, status="conditional", engine="rank",
+                                       detail="proof unavailable; GRH path not taken")
+        else:
+            r = E.rank(proof=False)
+            return CertifiedResult(value=r, status="heuristic", engine="rank",
+                                   detail="proof=False; heuristic retained")
+    except Exception as e:
+        return CertifiedResult(None, "error", "rank", str(e))
 
 
 def query(engine: str, payload: dict) -> CertifiedResult:
@@ -84,5 +102,7 @@ def query(engine: str, payload: dict) -> CertifiedResult:
     if engine == "classgroup":
         return class_group(payload["coeffs"], payload.get("name", "a"))
     if engine == "ap":
-        return elliptic_ap(payload["label"])
+        return elliptic_ap(payload["label"], payload.get("bound", 20))
+    if engine == "rank":
+        return elliptic_rank(payload["label"], payload.get("proof", False))
     return CertifiedResult(None, "error", engine, "unknown engine")
