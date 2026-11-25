@@ -33,19 +33,20 @@ The residual seed is the ceiling and the evidence. Frequent fire without residua
 
 ## Wiring
 
-Engines are absorbed as organs under `refugia/engines.py`.  
-Every query returns a `CertifiedResult` with an explicit status.  
-Callers must retain the label. No auto-promotion.
+- `refugia/engines.py` — absorbed engines. Every query returns `CertifiedResult` with status.
+- `refugia/oracle.py` — Oracle organ. Claims route through the engines. Receipts append-only under `society/receipts/oracle.jsonl`.
+- Status labels are retained. No auto-promotion path.
 
 ```bash
 pip install -r requirements.txt
 python scripts/wire_check.py
+python scripts/oracle_demo.py
 ```
 
-Manual runner only: Actions → Refugia check. No schedule. No evolve cycles until the society code is absorbed and the structure holds.
+Manual runner only: Actions → Refugia check. No schedule. No evolve cycles until the society mechanics are fully absorbed and the structure holds.
 
 ## Status
 
-Wiring begun. Residual seed intact. Greater system still emerging.
+Oracle organ live. Residual seed intact. Greater system continuing to form.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
