@@ -44,18 +44,18 @@ def factor_integer(n: int) -> CertifiedResult:
 
 
 def class_group(poly_coeffs: list, name: str = "a") -> CertifiedResult:
-    """poly_coeffs is low-to-high. Convert to monic by reversing and normalizing."""
+    """poly_coeffs low-to-high degree. Construct monic polynomial."""
     try:
         from sagebrush.sage import NumberField, PolynomialRing, QQ
         R = PolynomialRing(QQ, "x")
         x = R.gen()
-        # Reverse to high-to-low and ensure monic
-        coeffs = list(reversed(poly_coeffs))
-        if coeffs and coeffs[0] != 1:
-            # Normalize leading coefficient to 1 if possible
-            lead = coeffs[0]
-            coeffs = [c / lead for c in coeffs]
-        poly = sum(c * x**(len(coeffs)-1-i) for i, c in enumerate(coeffs))
+        # poly_coeffs[0] is constant term, last is highest degree
+        deg = len(poly_coeffs) - 1
+        poly = sum(c * x**i for i, c in enumerate(poly_coeffs))
+        # Make monic by dividing by leading coefficient
+        lead = poly_coeffs[-1]
+        if lead != 1 and lead != 0:
+            poly = poly / lead
         K = NumberField(poly, name)
         cg = K.class_group()
         return CertifiedResult(
