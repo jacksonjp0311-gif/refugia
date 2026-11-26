@@ -1,0 +1,60 @@
+# Refugia — scheduled evolve (GitHub Actions cron)
+# propose (if quiet) → loop → accept proven keeps → witness
+# No human gate. Status contract retained. Failure noisy. Success quiet.
+# Residual seed intact. Not AGI.
+name: Refugia evolve
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      note:
+        description: "Optional note"
+        required: false
+        default: "manual evolve"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refugia-evolve
+  cancel-in-progress: false
+
+jobs:
+  evolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install engines
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Evolve step
+        run: |
+          set -euo pipefail
+          python scripts/evolve.py
+
+      - name: Commit receipts if changed
+        run: |
+          set -euo pipefail
+          git config user.name "refugia-evolve"
+          git config user.email "refugia-evolve@users.noreply.github.com"
+          git add society/receipts/ || true
+          if git diff --cached --quiet; then
+            echo "no receipt changes"
+          else
+            git commit -m "evolve: append receipts under status contract [skip ci]"
+            git push
+          fi
