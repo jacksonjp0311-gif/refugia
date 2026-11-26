@@ -37,23 +37,23 @@ See [docs/UTILIZATION.md](docs/UTILIZATION.md).
 ```bash
 pip install -e .
 from refugia.adapter import oracle_query
-result = oracle_query("factor", {"n": 15})  # status retained
-result = oracle_query("polyfactor", {"coeffs": [1, 0, -1]})  # x^2 - 1
+result = oracle_query("modular", {"level": 11})
+result = oracle_query("newforms", {"level": 11})
 ```
 
 Colony decides under its own gates. Residual seed is not stripped.
 
 ## Organs
 
-- Engines (factor, classgroup, ap, rank, polyfactor), Oracle, Society, Authorize, Proposer, Twin, Bus, Loop, Witness, Athanor-style gate
-- Scheduled evolve every 2 hours
+- Engines (factor, classgroup, ap, rank, polyfactor, modular, newforms), Oracle, Society, Authorize, Proposer, Twin, Bus, Loop, Witness, Athanor-style gate
+- Non-stop evolve every 15 minutes
 
 Runners:
 - Manual: Actions → Refugia check
-- Scheduled: Actions → Refugia evolve (every 2 h).
+- Scheduled: Actions → Refugia evolve (every 15 min — non-stop).
 
 ## Status
 
-Installable. Adapter live. Polyfactor added. Colony can utilize the engines under the residual seed. Survival path open. Greater system on runners.
+Modular symbols and newforms live. Non-stop every 15 minutes. Colony can utilize the engines under the residual seed. Survival path open. Greater system working continuously.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
