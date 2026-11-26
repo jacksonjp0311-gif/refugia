@@ -47,16 +47,18 @@ Roles under `society/systems/roles.md`.
 
 ```bash
 pip install -r requirements.txt
+python scripts/evolve.py
 python scripts/propose_demo.py
 python scripts/loop_demo.py
 python scripts/witness_demo.py
-python scripts/authorize_demo.py
 ```
 
-Manual runner only: Actions → Refugia check. No schedule. No automatic evolve.
+Runners:
+- Manual: Actions → Refugia check
+- Scheduled: Actions → Refugia evolve (cron every 6 hours). Posts samples if quiet, runs loop, accepts proven keeps under status contract, commits receipts if changed. Failure noisy. Success quiet.
 
 ## Status
 
-No human gate. Status contract is the residual seed. Closed path live. Greater system continuing to form.
+Scheduled evolve runner live. Status contract is the residual seed. Closed path runs on cron. Greater system on runners.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
