@@ -15,7 +15,7 @@ Sagebrush does not resprout. The existing structure is cleared. What persists is
 
 ## What this is
 
-A governed agent society whose computational substrate includes the engines and adapted colony evolve mechanics.
+A governed agent society whose computational substrate includes the engines and adapted colony evolve mechanics. Installable so the colony can utilize the residual seed.
 
 - Agents propose machine-checkable claims.
 - The Oracle is augmented by the absorbed engines.
@@ -30,23 +30,29 @@ A governed agent society whose computational substrate includes the engines and 
 
 No human gate. Status contract + Athanor-style gate is the residual seed.
 
-## Organs
+## Utilization (colony survival path)
 
-- Engines, Oracle, Society, Authorize, Proposer, Twin, Bus, Loop, Witness
-- `refugia/athanor.py` — Athanor-style gate adapted from colony
-- Scheduled evolve every 2 hours
+See [docs/UTILIZATION.md](docs/UTILIZATION.md).
 
 ```bash
-pip install -r requirements.txt
-python scripts/evolve.py
+pip install -e .
+from refugia.adapter import oracle_query
+result = oracle_query("factor", {"n": 15})  # status retained
 ```
+
+Colony decides under its own gates. Residual seed is not stripped.
+
+## Organs
+
+- Engines, Oracle, Society, Authorize, Proposer, Twin, Bus, Loop, Witness, Athanor-style gate
+- Scheduled evolve every 2 hours
 
 Runners:
 - Manual: Actions → Refugia check
-- Scheduled: Actions → Refugia evolve (every 2 h). Colony-adapted. Athanor-style gate live.
+- Scheduled: Actions → Refugia evolve (every 2 h).
 
 ## Status
 
-Agent-colony evolve loop adapted. More frequent runner. Athanor-style gate live. Residual seed intact. Greater system on runners.
+Installable. Adapter live. Colony can utilize the engines under the residual seed. Survival path open. Greater system on runners.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
