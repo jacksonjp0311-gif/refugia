@@ -49,10 +49,7 @@ def class_group(poly_coeffs: list, name: str = "a") -> CertifiedResult:
         from sagebrush.sage import NumberField, PolynomialRing, QQ
         R = PolynomialRing(QQ, "x")
         x = R.gen()
-        # poly_coeffs[0] is constant term, last is highest degree
-        deg = len(poly_coeffs) - 1
         poly = sum(c * x**i for i, c in enumerate(poly_coeffs))
-        # Make monic by dividing by leading coefficient
         lead = poly_coeffs[-1]
         if lead != 1 and lead != 0:
             poly = poly / lead
@@ -96,6 +93,18 @@ def elliptic_rank(label: str, proof: bool = False) -> CertifiedResult:
         return CertifiedResult(None, "error", "rank", str(e))
 
 
+def poly_factor(coeffs: list) -> CertifiedResult:
+    """Factor a polynomial over QQ. coeffs low-to-high."""
+    try:
+        from sagebrush.sage import PolynomialRing, QQ, factor
+        R = PolynomialRing(QQ, "x")
+        x = R.gen()
+        poly = sum(c * x**i for i, c in enumerate(coeffs))
+        return _safe_call(factor, "polyfactor", poly)
+    except Exception as e:
+        return CertifiedResult(None, "error", "polyfactor", str(e))
+
+
 def query(engine: str, payload: dict) -> CertifiedResult:
     """Single entry point for the society bus or Oracle.
 
@@ -109,4 +118,6 @@ def query(engine: str, payload: dict) -> CertifiedResult:
         return elliptic_ap(payload["label"], payload.get("bound", 20))
     if engine == "rank":
         return elliptic_rank(payload["label"], payload.get("proof", False))
+    if engine == "polyfactor":
+        return poly_factor(payload["coeffs"])
     return CertifiedResult(None, "error", engine, "unknown engine")
