@@ -105,6 +105,34 @@ def poly_factor(coeffs: list) -> CertifiedResult:
         return CertifiedResult(None, "error", "polyfactor", str(e))
 
 
+def modular_symbols(level: int, weight: int = 2) -> CertifiedResult:
+    try:
+        from sagebrush.sage import ModularSymbols
+        M = ModularSymbols(level, weight)
+        return CertifiedResult(
+            value={"dimension": M.dimension(), "repr": str(M)},
+            status="proven",
+            engine="modular",
+            detail="modular symbols space; proven by engine",
+        )
+    except Exception as e:
+        return CertifiedResult(None, "error", "modular", str(e))
+
+
+def newforms(level: int, weight: int = 2) -> CertifiedResult:
+    try:
+        from sagebrush.sage import Newforms
+        nfs = Newforms(level, weight)
+        return CertifiedResult(
+            value=[str(f) for f in nfs],
+            status="proven",
+            engine="newforms",
+            detail="newforms; proven by modular symbols engine",
+        )
+    except Exception as e:
+        return CertifiedResult(None, "error", "newforms", str(e))
+
+
 def query(engine: str, payload: dict) -> CertifiedResult:
     """Single entry point for the society bus or Oracle.
 
@@ -120,4 +148,8 @@ def query(engine: str, payload: dict) -> CertifiedResult:
         return elliptic_rank(payload["label"], payload.get("proof", False))
     if engine == "polyfactor":
         return poly_factor(payload["coeffs"])
+    if engine == "modular":
+        return modular_symbols(payload["level"], payload.get("weight", 2))
+    if engine == "newforms":
+        return newforms(payload["level"], payload.get("weight", 2))
     return CertifiedResult(None, "error", engine, "unknown engine")
