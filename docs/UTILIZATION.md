@@ -17,12 +17,8 @@ from refugia.adapter import oracle_query, available_engines
 
 print(available_engines())
 result = oracle_query("factor", {"n": 15})
-# {
-#   "value": ...,
-#   "status": "proven",
-#   "engine": "factor",
-#   "detail": null
-# }
+# status retained: "proven" | "conditional" | "heuristic" | "error"
+result = oracle_query("polyfactor", {"coeffs": [1, 0, -1]})  # x^2 - 1
 ```
 
 Status is never stripped. Colony's Oracle, Athanor gates, human authorize, and selective authorize remain in force on the colony side.
@@ -33,6 +29,10 @@ Status is never stripped. Colony's Oracle, Athanor gates, human authorize, and s
 - **conditional** — labeled. Candidate only under colony's gates. Do not auto-promote.
 - **heuristic** — report-only. No fitness credit. No keep.
 - **error** — revert or hold.
+
+## Engines
+
+- factor, classgroup, ap, rank, polyfactor
 
 ## What not to do
 
