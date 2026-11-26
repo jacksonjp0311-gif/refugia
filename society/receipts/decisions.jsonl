@@ -1,0 +1,3 @@
+{"claim_id": "prop_factor_fermat", "action": "hold", "status": "proven", "reason": "no expected value or inconclusive", "timestamp": "2026-11-26T11:15:50Z"}
+{"claim_id": "prop_classgroup_sample", "action": "hold", "status": "conditional", "reason": "status conditional retained; not promoted", "timestamp": "2026-11-26T11:15:50Z"}
+{"claim_id": "prop_rank_11a", "action": "hold", "status": "heuristic", "reason": "status heuristic retained; not promoted", "timestamp": "2026-11-26T11:15:50Z"}
