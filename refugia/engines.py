@@ -27,7 +27,6 @@ def _safe_call(fn, engine: str, *args, **kwargs) -> CertifiedResult:
         result = fn(*args, **kwargs)
         status = getattr(result, "status", None)
         if status not in ("proven", "conditional", "heuristic"):
-            # Default: treat successful engine return as proven unless known otherwise
             status = "proven"
         return CertifiedResult(value=result, status=status, engine=engine)
     except Exception as e:
@@ -45,14 +44,20 @@ def factor_integer(n: int) -> CertifiedResult:
 
 
 def class_group(poly_coeffs: list, name: str = "a") -> CertifiedResult:
+    """poly_coeffs is low-to-high. Convert to monic by reversing and normalizing."""
     try:
         from sagebrush.sage import NumberField, PolynomialRing, QQ
         R = PolynomialRing(QQ, "x")
         x = R.gen()
-        poly = sum(c * x**i for i, c in enumerate(poly_coeffs))
+        # Reverse to high-to-low and ensure monic
+        coeffs = list(reversed(poly_coeffs))
+        if coeffs and coeffs[0] != 1:
+            # Normalize leading coefficient to 1 if possible
+            lead = coeffs[0]
+            coeffs = [c / lead for c in coeffs]
+        poly = sum(c * x**(len(coeffs)-1-i) for i, c in enumerate(coeffs))
         K = NumberField(poly, name)
         cg = K.class_group()
-        # Class groups in Sagebrush are typically certified under GRH
         return CertifiedResult(
             value=str(cg),
             status="conditional",
@@ -77,7 +82,6 @@ def elliptic_rank(label: str, proof: bool = False) -> CertifiedResult:
         from sagebrush.sage import EllipticCurve
         E = EllipticCurve(label)
         if proof:
-            # Rank with proof may raise or return conditional
             try:
                 r = E.rank()
                 return CertifiedResult(value=r, status="proven", engine="rank")
