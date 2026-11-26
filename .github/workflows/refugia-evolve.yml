@@ -1,18 +1,22 @@
-# Refugia — scheduled evolve (GitHub Actions cron)
-# propose (if quiet) → loop → accept proven keeps → witness
-# No human gate. Status contract retained. Failure noisy. Success quiet.
+# Refugia — scheduled evolve (adapted from agent-colony)
+# propose → loop → status contract → accept under gate → witness
+# More frequent. Athanor-style gate live. Failure noisy. Success quiet.
 # Residual seed intact. Not AGI.
 name: Refugia evolve
 
 on:
   schedule:
-    - cron: "17 */6 * * *"
+    - cron: "7 */2 * * *"   # every 2 hours
   workflow_dispatch:
     inputs:
       note:
         description: "Optional note"
         required: false
         default: "manual evolve"
+      cycles:
+        description: "Evolve steps"
+        required: false
+        default: "1"
 
 permissions:
   contents: write
@@ -24,7 +28,10 @@ concurrency:
 jobs:
   evolve:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
+    env:
+      REFUGIA_ATHANOR_GATE: live
+      REFUGIA_STATUS_PROMOTE: conditional   # allow conditional as candidate under gate
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,7 +48,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Evolve step
+      - name: Evolve step (colony-adapted)
         run: |
           set -euo pipefail
           python scripts/evolve.py
@@ -55,6 +62,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "no receipt changes"
           else
-            git commit -m "evolve: append receipts under status contract [skip ci]"
+            git commit -m "evolve: append under status + Athanor-style gate [skip ci]"
             git push
           fi
