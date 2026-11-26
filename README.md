@@ -4,7 +4,7 @@
 
 **Refugia** is the organism formed when Agent Colony absorbs Sagebrush.
 
-Sagebrush does not resprout. The existing structure is cleared. What persists is the certified seed—proven results, the append-only witness, the hard ceiling—that can re-establish under the same constraints.
+Sagebrush does not resprout. The existing structure is cleared. What persists is the certified seed—proven results, the append-only witness, the status contract—that can re-establish under the same constraints.
 
 ## Lineage
 
@@ -20,30 +20,30 @@ A governed agent society whose computational substrate now includes the engines.
 - Agents propose machine-checkable claims.
 - The Oracle is augmented by the absorbed engines.
 - Results carry explicit status. Heuristic or conditional outputs stay labeled and do not auto-promote.
-- Human authorization remains required for anything durable.
 - Public record stays outside the mutation set.
 
 ## Hard ceiling
 
 1. Creator tribute.
-2. Human authorize.
-3. Append-only witness.
+2. Append-only witness.
 
-The residual seed is the ceiling and the evidence. Frequent fire without residual patches converts the system. Same rule here.
+No human gate. Proven+matched keep candidates can be accepted under the status contract. Conditional and heuristic results remain labeled and do not promote.
+
+The residual seed is the status label and the append-only witness. Frequent fire without residual patches converts the system. Same rule here.
 
 ## Organs
 
 - `refugia/engines.py` — absorbed engines (factor, classgroup, ap, rank). Status always returned. Class groups conditional (GRH). Rank proof=False heuristic.
 - `refugia/oracle.py` — Oracle. Claims route through the engines. Receipts append-only.
-- `refugia/society.py` — Society. Proposals → keep/hold/revert under status. Keep becomes candidate only.
-- `refugia/authorize.py` — Authorization surface. Records keep candidates. Durable acceptance requires explicit human flag. No role can accept without it.
+- `refugia/society.py` — Society. Proposals → keep/hold/revert under status. Keep becomes candidate.
+- `refugia/authorize.py` — Records keep candidates. Proven+matched candidates can be accepted. No human gate.
 - `refugia/proposer.py` — Proposer. Posts well-formed claims to the bus. Does not verify or decide.
 - `refugia/twin.py` — Twin. Treatment vs control. No promotion from twin.
 - `refugia/bus.py` — Bus. Append-only messages between roles.
 - `refugia/loop.py` — Minimal loop. Reads `propose` from bus, skips already-decided, runs society cycle, posts decisions.
 - `refugia/witness.py` — Witness. Summarizes decisions, bus topics, oracle count. Does not mutate.
 
-Roles under `society/systems/roles.md`. Authorization boundary is explicit: durable acceptance is outside the roles.
+Roles under `society/systems/roles.md`.
 
 ```bash
 pip install -r requirements.txt
@@ -53,10 +53,10 @@ python scripts/witness_demo.py
 python scripts/authorize_demo.py
 ```
 
-Manual runner only: Actions → Refugia check. No schedule. No automatic evolve. Human authorize still required for durable acceptance.
+Manual runner only: Actions → Refugia check. No schedule. No automatic evolve.
 
 ## Status
 
-Proposer and authorization surface live. Closed path: propose → verify → decide → candidate. Residual seed intact. Greater system continuing to form.
+No human gate. Status contract is the residual seed. Closed path live. Greater system continuing to form.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
