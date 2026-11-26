@@ -38,13 +38,14 @@ See [docs/UTILIZATION.md](docs/UTILIZATION.md).
 pip install -e .
 from refugia.adapter import oracle_query
 result = oracle_query("factor", {"n": 15})  # status retained
+result = oracle_query("polyfactor", {"coeffs": [1, 0, -1]})  # x^2 - 1
 ```
 
 Colony decides under its own gates. Residual seed is not stripped.
 
 ## Organs
 
-- Engines, Oracle, Society, Authorize, Proposer, Twin, Bus, Loop, Witness, Athanor-style gate
+- Engines (factor, classgroup, ap, rank, polyfactor), Oracle, Society, Authorize, Proposer, Twin, Bus, Loop, Witness, Athanor-style gate
 - Scheduled evolve every 2 hours
 
 Runners:
@@ -53,6 +54,6 @@ Runners:
 
 ## Status
 
-Installable. Adapter live. Colony can utilize the engines under the residual seed. Survival path open. Greater system on runners.
+Installable. Adapter live. Polyfactor added. Colony can utilize the engines under the residual seed. Survival path open. Greater system on runners.
 
 Repo: https://github.com/jacksonjp0311-gif/refugia
