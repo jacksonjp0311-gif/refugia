@@ -1,9 +1,8 @@
 """Authorization surface.
 
 Keep candidates are written to an append-only file.
-Durable acceptance requires an explicit human flag.
-No role can perform durable acceptance without the flag.
-Residual seed: the candidate list and the human gate.
+No human gate. Proven+matched candidates can be accepted by the society.
+Residual seed: the candidate list and the status contract.
 """
 
 from __future__ import annotations
@@ -44,9 +43,7 @@ class Authorizer:
             f.write(json.dumps(c.to_dict()) + "\n")
         return c
 
-    def accept(self, claim_id: str, human_flag: bool, authorizer: str = "James Paul Jackson") -> dict:
-        if not human_flag:
-            return {"accepted": False, "reason": "human_flag required"}
+    def accept(self, claim_id: str) -> dict:
         # Confirm it is a candidate
         found = False
         if self.candidates_path.exists():
@@ -62,9 +59,8 @@ class Authorizer:
         receipt = {
             "claim_id": claim_id,
             "accepted": True,
-            "authorizer": authorizer,
             "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "note": "durable acceptance under human flag",
+            "note": "durable acceptance under status contract; no human gate",
         }
         with self.accepted_path.open("a") as f:
             f.write(json.dumps(receipt) + "\n")
