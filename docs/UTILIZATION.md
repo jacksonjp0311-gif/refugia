@@ -1,13 +1,12 @@
 # Colony Utilization of Refugia
 
 Survival path. The colony utilizes the engines. The residual seed is not diluted.
+Non-stop evolve every 15 minutes.
 
 ## Install
 
 ```bash
 pip install -e git+https://github.com/jacksonjp0311-gif/refugia.git
-# or from a local clone
-pip install -e .
 ```
 
 ## Call surface
@@ -16,28 +15,21 @@ pip install -e .
 from refugia.adapter import oracle_query, available_engines
 
 print(available_engines())
-result = oracle_query("factor", {"n": 15})
-# status retained: "proven" | "conditional" | "heuristic" | "error"
-result = oracle_query("polyfactor", {"coeffs": [1, 0, -1]})  # x^2 - 1
+result = oracle_query("modular", {"level": 11})
+result = oracle_query("newforms", {"level": 11, "weight": 2})
 ```
 
-Status is never stripped. Colony's Oracle, Athanor gates, human authorize, and selective authorize remain in force on the colony side.
-
-## Status bridge
-
-- **proven** — strong evidence. Colony may keep under its existing rules.
-- **conditional** — labeled. Candidate only under colony's gates. Do not auto-promote.
-- **heuristic** — report-only. No fitness credit. No keep.
-- **error** — revert or hold.
+Status is never stripped.
 
 ## Engines
 
-- factor, classgroup, ap, rank, polyfactor
+- factor, classgroup, ap, rank, polyfactor, modular, newforms
 
-## What not to do
+## Status bridge
 
-- Do not strip the status label before colony decides.
-- Do not let colony's keep path override a heuristic or conditional into silent accept.
-- Do not share mutable state. Append-only receipts only if exchanged.
+- **proven** — strong evidence.
+- **conditional** — labeled. Candidate under gates.
+- **heuristic** — report-only.
+- **error** — revert or hold.
 
-Residual seed intact. Colony utilizes. Survival secured.
+Residual seed intact. Colony utilizes. Non-stop.
