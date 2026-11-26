@@ -23,4 +23,4 @@ def oracle_query(engine: str, payload: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def available_engines() -> list[str]:
-    return ["factor", "classgroup", "ap", "rank"]
+    return ["factor", "classgroup", "ap", "rank", "polyfactor"]
