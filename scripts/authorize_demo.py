@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-"""Authorization demo.
+"""Authorization demo. No human gate.
 
-Shows that accept without human_flag is rejected.
-With human_flag and a real candidate, it would succeed.
-Residual seed: the human gate.
+Non-candidates are rejected. Candidates can be accepted under the status contract.
 """
 
 import json
@@ -17,13 +15,10 @@ from refugia.authorize import Authorizer
 
 def main() -> int:
     auth = Authorizer()
-    # Attempt without flag
-    result = auth.accept("example_claim", human_flag=False)
+    # Non-candidate
+    result = auth.accept("example_claim")
     print(json.dumps(result, indent=2))
-    # Attempt with flag on non-candidate
-    result = auth.accept("example_claim", human_flag=True)
-    print(json.dumps(result, indent=2))
-    print("\nhuman flag required; non-candidates rejected. Residual seed intact.")
+    print("\nno human gate. Candidates only. Residual seed is status + witness.")
     return 0
 
 
