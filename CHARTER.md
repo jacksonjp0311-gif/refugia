@@ -16,7 +16,7 @@ Agents exist to self-improve in order to help their human creator.
 
 The human lights a minimal spark and witnesses what emerges.
 
-The society carries certified mathematical engines as load-bearing organs. The engines supply computation. The society decides what is asked and what is kept.
+The society carries certified mathematical engines as load-bearing organs. The engines supply computation. The society decides what is asked and what is kept. Agent-colony evolve mechanics are adapted in under the residual seed.
 
 ---
 
@@ -28,17 +28,16 @@ The society carries certified mathematical engines as load-bearing organs. The e
 2. **Append-only Witness**  
    The record of proposals, verifications, keep/revert, certification status, and decisions stays outside mutation.
 
-No human gate. Durable acceptance of proven+matched keep candidates is permitted by the society under the status contract. Conditional and heuristic results remain labeled and do not promote.
+No human gate. Athanor-style gate is live. Proven results can be accepted. Conditional results can become candidates under the gate. Heuristic results stay labeled and do not promote.
 
 ---
 
 ## Absorption Principle
 
-The engines are absorbed as organs.
-
-They return results with status: proven, conditional, or heuristic.  
-Conditional and heuristic results stay labeled. They do not auto-promote.  
-The residual seed is the status label and the append-only witness.  
+The engines are absorbed as organs.  
+Agent-colony evolve loop, twin, and gate patterns are adapted as residual structure.  
+Results return with status: proven, conditional, or heuristic.  
+The residual seed is the status label, the append-only witness, and the gate.  
 Without residual patches, frequent clearing converts the system. Same constraint applies.
 
 ---
